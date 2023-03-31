@@ -8,7 +8,7 @@ namespace Time
         public readonly byte Minutes { get; init; }
         public readonly byte Seconds { get; init; }
 
-        public Time(byte hours, byte minutes, byte seconds)
+        public Time(byte hours = 0, byte minutes = 0, byte seconds = 0)
         {
             if(hours > 23 || minutes > 59 || seconds > 59)
             {
@@ -26,7 +26,11 @@ namespace Time
             Minutes = byte.Parse(parts[1]);
             Seconds = byte.Parse(parts[2]);
 
-            if (Hours > 23 || Minutes > 59 || Seconds > 59)
+            if(parts.Length > 3)
+            {
+                throw new ArgumentException("Too many arguments");
+            }
+            else if (Hours > 23 || Minutes > 59 || Seconds > 59)
             {
                 throw new ArgumentException();
             }
@@ -34,7 +38,7 @@ namespace Time
 
         public override string ToString()
         {
-            return $"{Hours}:{Minutes}:{Seconds}";
+            return $"{Hours.ToString("00")}:{Minutes.ToString("00")}:{Seconds.ToString("00")}";
         }
 
         public bool Equals(Time other)
