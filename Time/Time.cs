@@ -36,10 +36,7 @@ namespace Time
             }
         }
 
-        public override string ToString()
-        {
-            return $"{Hours.ToString("00")}:{Minutes.ToString("00")}:{Seconds.ToString("00")}";
-        }
+        public override string ToString() => $"{Hours.ToString("00")}:{Minutes.ToString("00")}:{Seconds.ToString("00")}";
 
         public bool Equals(Time other)
         {
@@ -87,5 +84,75 @@ namespace Time
         public static bool operator <(Time left, Time right) => right.CompareTo(left) > 0;
         public static bool operator >=(Time left, Time right) => left.CompareTo(right) > 0 || left.Equals(right);
         public static bool operator <=(Time left, Time right) => right.CompareTo(left) > 0 || right.Equals(left);
+        public static Time operator +(Time left, TimePeriod right) => Time.Plus(left, right);
+        public static Time operator -(Time left, TimePeriod right) => Time.Minus(left, right);
+        public static Time operator ++(Time other) => new Time(Convert.ToByte( other.Hours + 1), other.Minutes, other.Seconds);
+        public static Time operator --(Time other) => new Time(Convert.ToByte( other.Hours - 1), other.Minutes, other.Seconds);
+
+        public Time Plus(TimePeriod time)
+        {
+            long seconds = (time.Hours * 3600) + (time.Minutes * 60) + (time.Seconds);
+
+            byte h = Convert.ToByte( seconds / 3600);
+            byte m = Convert.ToByte( (seconds % 3600) / 60);
+            byte s = Convert.ToByte( seconds % 60);
+
+            h += this.Hours;
+            m += this.Minutes;
+            s += this.Seconds;
+            
+            return new Time(h, m, s);
+        }
+
+        public static Time Plus(Time left, TimePeriod right)
+        {
+            long seconds = (right.Hours * 3600) + (right.Minutes * 60) + (right.Seconds);
+
+            byte h = Convert.ToByte(seconds / 3600);
+            byte m = Convert.ToByte((seconds % 3600) / 60);
+            byte s = Convert.ToByte(seconds % 60);
+
+            h += left.Hours;
+            m += left.Minutes;
+            s += left.Seconds;
+
+            return new Time(h, m, s);
+        }
+
+        public Time Minus(TimePeriod time)
+        {
+            long seconds = (time.Hours * 3600) + (time.Minutes * 60) + (time.Seconds);
+
+            byte h = Convert.ToByte(seconds / 3600);
+            byte m = Convert.ToByte((seconds % 3600) / 60);
+            byte s = Convert.ToByte(seconds % 60);
+
+            byte Timeh = this.Hours;
+            byte Timem = this.Minutes;
+            byte Times = this.Seconds;
+
+            Timeh -= h;
+            Timem -= m;
+            Times -= s;
+            return new Time(Timeh, Timem, Times);
+        }
+
+        public static Time Minus(Time time, TimePeriod timePeriod)
+        {
+            long seconds = (timePeriod.Hours * 3600) + (timePeriod.Minutes * 60) + (timePeriod.Seconds);
+
+            byte h = Convert.ToByte(seconds / 3600);
+            byte m = Convert.ToByte((seconds % 3600) / 60);
+            byte s = Convert.ToByte(seconds % 60);
+
+            byte Timeh = time.Hours;
+            byte Timem = time.Minutes;
+            byte Times = time.Seconds;
+
+            Timeh -= h;
+            Timem -= m;
+            Times -= s;
+            return new Time(Timeh, Timem, Times);
+        }
     }
 }
